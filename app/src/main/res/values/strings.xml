@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">App Itca</string>
+    <string name="titulo">CRUD SQLite - ITCA</string>
+    <string name="codigo">Inserte un còdigo</string>
+    <string name="descrpcion">Inserte una descripcion</string>
+    <string name="precio">Inserte un precio</string>
+
+</resources>
