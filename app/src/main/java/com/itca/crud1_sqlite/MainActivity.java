@@ -2,6 +2,9 @@ package com.itca.crud1_sqlite;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.ContentValues;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -42,9 +45,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View view) {
 
-
+        AdminSQLiteOpenHelper admin = new AdminSQLiteOpenHelper(this, "administracion", null, 1);
+        ContentValues registro = new ContentValues();
+        String cod, descri, pre;
+        int cant;
+        SQLiteDatabase bd = admin.getWritableDatabase();
+        Cursor fila;
 
         switch (view.getId()){
+
             case R.id.btnAlta:
             //Toast.makeText(this, "Has hecho clic en el boton alta", Toast.LENGTH_SHORT).show();
 
@@ -62,32 +71,106 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     Toast.makeText(this, "Has Superado la Validacion", Toast.LENGTH_SHORT).show();
                 }
 
+                cod = etcodigo.getText().toString();
+                descri = etdescripcion.getText().toString();
+                pre = etPrecio.getText().toString();
+
+                registro.put("codigo", cod);
+                registro.put("descripcion", descri);
+                registro.put("precio", pre);
+
+                bd.insert("articulos", null, registro);
+                bd.close();
+
+                etcodigo.setText("");;
+                etdescripcion.setText("");
+                etPrecio.setText("");
+
+                Toast.makeText(this, "Se cargaron los datos del articulo", Toast.LENGTH_SHORT).show();
+
+
             break;
 
             case R.id.btnConsultarCodigo:
-                Toast.makeText(this, "Has hecho clic en el boton alta", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(this, "Has hecho clic en el boton alta", Toast.LENGTH_SHORT).show();
+
+
+                cod = etcodigo.toString();
+                fila = bd.rawQuery("select descripcion, precio from articulos where codigo=" + cod, null);
+                if(fila.moveToFirst()){
+                    etdescripcion.setText(fila.getString(0));
+                    etPrecio.setText(fila.getString(1));
+                }else{
+                    Toast.makeText(this, "No existe un archivo con dicho código", Toast.LENGTH_SHORT).show();
+                }
+
                 break;
 
             case R.id.btnConsultaDescripcion:
-                Toast.makeText(this, "Has hecho clic en el boton alta", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(this, "Has hecho clic en el boton alta", Toast.LENGTH_SHORT).show();
+
+                descri = etdescripcion.getText().toString();
+                fila = bd.rawQuery("select codigo, precio from articulos where descripcion='" + descri +"'", null);
+                if (fila.moveToFirst()) {
+                    etcodigo.setText(fila.getString(0));
+                    etPrecio.setText(fila.getString(1));
+
+                }else{
+                    Toast.makeText(this, "No existe un articulo con dicha descripcion", Toast.LENGTH_SHORT).show();
+                    bd.close();
+                }
+
                 break;
 
             case R.id.btnEliminar:
-                Toast.makeText(this, "Has hecho clic en el boton alta", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(this, "Has hecho clic en el boton alta", Toast.LENGTH_SHORT).show();
+
+                cod = etcodigo.getText().toString();
+                cant = bd.delete("articulos", "codigo=" + cod, null);
+                bd.close();
+                etcodigo.setText("");;
+                etdescripcion.setText("");
+                etPrecio.setText("");
+
+                if(cant == 1){
+                    Toast.makeText(this, "Se borro el articulo con dicho código", Toast.LENGTH_SHORT).show();
+
+                }else{
+                    Toast.makeText(this, "No existe un articulo con dicho código", Toast.LENGTH_SHORT).show();
+                }
+
                 break;
 
 
             case R.id.btnModificar:
-                Toast.makeText(this, "Has hecho clic en el boton alta", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(this, "Has hecho clic en el boton alta", Toast.LENGTH_SHORT).show();
+
+                cod = etcodigo.getText().toString();
+                descri = etdescripcion.getText().toString();
+                pre = etPrecio.getText().toString();
+
+                registro.put("codigo", cod);
+                registro.put("descripcion", descri);
+                registro.put("precio", pre);
+
+                cant = bd.update("articulos", registro, "codigo=" + cod, null);
+                bd.close();
+
+                if(cant == 1){
+                    Toast.makeText(this, "se modificaron los datos", Toast.LENGTH_SHORT).show();
+                }else{
+                    Toast.makeText(this, "No existe un articulo con el código ingresado", Toast.LENGTH_SHORT).show();
+                }
+
                 break;
 
             case R.id.btnSalir:
-                Toast.makeText(this, "Has hecho clic en el boton alta", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Has hecho clic en el boton salir", Toast.LENGTH_SHORT).show();
                 break;
 
 
             case R.id.btnNuevo:
-                Toast.makeText(this, "Has hecho clic en el boton alta", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Has hecho clic en el boton nuevo", Toast.LENGTH_SHORT).show();
                 break;
 
 

@@ -9,6 +9,10 @@
         android:roundIcon="@drawable/ic_baseline"
         android:supportsRtl="true"
         android:theme="@style/Theme.Crud1sqlite">
+        <activity
+            android:name=".MainActivity2"
+            android:label="@string/title_activity_main2"
+            android:theme="@style/Theme.Crud1sqlite.NoActionBar"></activity>
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
