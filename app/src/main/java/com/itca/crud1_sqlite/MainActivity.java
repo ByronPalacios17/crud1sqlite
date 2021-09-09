@@ -107,22 +107,21 @@ bd.close();
 
             case R.id.btnConsultaDescripcion:
                 //Toast.makeText(this, "Has hecho clic en el boton alta", Toast.LENGTH_SHORT).show();
-
                 descripcion = etdescripcion.getText().toString();
 
                 if (descripcion.isEmpty()) {
-                    etcodigo.setError("campo obligatorio");
-
+                    etdescripcion.setError("campo obligatorio");
 
                 }else{
 
-                   cursor fila = bd.rawQuery("select codigo, precio from articulos where descripcion ='" + descripcion +"'", null);
+                   Cursor fila = bd.rawQuery("select codigo, precio from articulos where descripcion= '" + descripcion + "'", null);
                     if(fila.moveToFirst())
                     {
                         etcodigo.setText(fila.getString(0));
                         etPrecio.setText(fila.getString(1));
+                    }else{
                         Toast.makeText(this, "No existe un articulo con dicha descripcion", Toast.LENGTH_SHORT).show();
-                    }
+                    } bd.close();
                 }
 
 

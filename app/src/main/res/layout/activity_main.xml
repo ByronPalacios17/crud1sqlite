@@ -31,11 +31,7 @@
             android:gravity="center">
 
 
-    <ImageView
-        android:layout_width="200dp"
-        android:layout_height="150dp"
-        android:src="@drawable/pro1"
-        />
+
 
     <TextView
         android:id="@+id/textView"
@@ -104,6 +100,7 @@
         android:layout_height="wrap_content"
         android:ems="10"
         android:gravity="start|top"
+        android:textColor="@color/blanco"
         android:inputType="numberDecimal"
         tools:layout_editor_absoluteX="39dp"
         tools:layout_editor_absoluteY="286dp" />
@@ -177,6 +174,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="MODIFICACION"
+                android:onClick="onClick"
                 android:textColor="@color/blanco"
                 android:layout_marginRight="15dp"/>
 
