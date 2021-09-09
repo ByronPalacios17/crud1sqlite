@@ -16,6 +16,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private EditText etcodigo, etdescripcion, etPrecio;
     private Button btnAlta, btnConsultarCodigo, btnConsultaDescripcion, btnEliminar, btnModificar, btnSalir, btnNuevo;
 
+    AdminSQLiteOpenHelper admin = new AdminSQLiteOpenHelper(this, "administracion.db", null, 1);
+    int cant;
+
+    Cursor fila;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,12 +50,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View view) {
 
-        AdminSQLiteOpenHelper admin = new AdminSQLiteOpenHelper(this, "administracion", null, 1);
-        ContentValues registro = new ContentValues();
-        String cod, descri, pre;
-        int cant;
         SQLiteDatabase bd = admin.getWritableDatabase();
-        Cursor fila;
+        ContentValues registro = new ContentValues();
 
         switch (view.getId()){
 
@@ -61,6 +62,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 String descripcion = etdescripcion.getText().toString();
                 String precio = etPrecio.getText().toString();
 
+                registro.put("codigo", codigo);
+                registro.put("descripcion", descripcion);
+                registro.put("precio", precio);
+
                 if(codigo.isEmpty()){
                     etcodigo.setError("Campo Obligatorio");
                 }else if (descripcion.isEmpty()){
@@ -68,40 +73,34 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }else if(precio.isEmpty()){
                     etPrecio.setError("Campo Obligatorio");
                 }else{
-                    Toast.makeText(this, "Has Superado la Validacion", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(this, "Has Superado la Validacion", Toast.LENGTH_SHORT).show();
+                    bd.insert("articulos", null, registro);
+                    bd.close();
+                    etcodigo.setText(null);
+                    etdescripcion.setText(null);
+                    etPrecio.setText(null);
+                    Toast.makeText(this, "Registro guardado correctamente", Toast.LENGTH_SHORT).show();
                 }
-
-                cod = etcodigo.getText().toString();
-                descri = etdescripcion.getText().toString();
-                pre = etPrecio.getText().toString();
-
-                registro.put("codigo", cod);
-                registro.put("descripcion", descri);
-                registro.put("precio", pre);
-
-                bd.insert("articulos", null, registro);
-                bd.close();
-
-                etcodigo.setText("");;
-                etdescripcion.setText("");
-                etPrecio.setText("");
-
-                Toast.makeText(this, "Se cargaron los datos del articulo", Toast.LENGTH_SHORT).show();
-
 
             break;
 
             case R.id.btnConsultarCodigo:
                 //Toast.makeText(this, "Has hecho clic en el boton alta", Toast.LENGTH_SHORT).show();
+                codigo = etcodigo.getText().toString();
+                if(codigo.isEmpty()) {
+                    etcodigo.setError("Campo obligatorio");
 
-
-                cod = etcodigo.toString();
-                fila = bd.rawQuery("select descripcion, precio from articulos where codigo=" + cod, null);
-                if(fila.moveToFirst()){
-                    etdescripcion.setText(fila.getString(0));
-                    etPrecio.setText(fila.getString(1));
                 }else{
-                    Toast.makeText(this, "No existe un archivo con dicho código", Toast.LENGTH_SHORT).show();
+                    Cursor fila = bd.rawQuery("select descripcion, precio from articulos where codigo="+codigo, null);
+
+                    if(fila.moveToFirst()){
+                        etdescripcion.setText(fila.getString(0));
+                        etPrecio.setText(fila.getString(1));
+                    }
+                    else {
+                        Toast.makeText(this, "No existe un archivo con dicho código", Toast.LENGTH_SHORT).show();
+                    }
+bd.close();
                 }
 
                 break;
@@ -109,24 +108,31 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.btnConsultaDescripcion:
                 //Toast.makeText(this, "Has hecho clic en el boton alta", Toast.LENGTH_SHORT).show();
 
-                descri = etdescripcion.getText().toString();
-                fila = bd.rawQuery("select codigo, precio from articulos where descripcion='" + descri +"'", null);
-                if (fila.moveToFirst()) {
-                    etcodigo.setText(fila.getString(0));
-                    etPrecio.setText(fila.getString(1));
+                descripcion = etdescripcion.getText().toString();
+
+                if (descripcion.isEmpty()) {
+                    etcodigo.setError("campo obligatorio");
+
 
                 }else{
-                    Toast.makeText(this, "No existe un articulo con dicha descripcion", Toast.LENGTH_SHORT).show();
-                    bd.close();
+
+                   cursor fila = bd.rawQuery("select codigo, precio from articulos where descripcion ='" + descripcion +"'", null);
+                    if(fila.moveToFirst())
+                    {
+                        etcodigo.setText(fila.getString(0));
+                        etPrecio.setText(fila.getString(1));
+                        Toast.makeText(this, "No existe un articulo con dicha descripcion", Toast.LENGTH_SHORT).show();
+                    }
                 }
+
 
                 break;
 
             case R.id.btnEliminar:
                 //Toast.makeText(this, "Has hecho clic en el boton alta", Toast.LENGTH_SHORT).show();
 
-                cod = etcodigo.getText().toString();
-                cant = bd.delete("articulos", "codigo=" + cod, null);
+                codigo = etcodigo.getText().toString();
+                cant = bd.delete("articulos", "codigo=" + codigo, null);
                 bd.close();
                 etcodigo.setText("");;
                 etdescripcion.setText("");
@@ -145,15 +151,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.btnModificar:
                 //Toast.makeText(this, "Has hecho clic en el boton alta", Toast.LENGTH_SHORT).show();
 
-                cod = etcodigo.getText().toString();
-                descri = etdescripcion.getText().toString();
-                pre = etPrecio.getText().toString();
+                codigo = etcodigo.getText().toString();
+                descripcion = etdescripcion.getText().toString();
+                precio = etPrecio.getText().toString();
 
-                registro.put("codigo", cod);
-                registro.put("descripcion", descri);
-                registro.put("precio", pre);
+                registro.put("codigo", codigo);
+                registro.put("descripcion", descripcion);
+                registro.put("precio", precio);
 
-                cant = bd.update("articulos", registro, "codigo=" + cod, null);
+                cant = bd.update("articulos", registro, "codigo=" + codigo, null);
                 bd.close();
 
                 if(cant == 1){

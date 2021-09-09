@@ -2,12 +2,12 @@
 <androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:gravity="center"
     android:layout_margin="15dp"
-    android:background="@drawable/ter3"
+    android:background="@drawable/f"
     tools:context=".MainActivity">
 
 
@@ -54,6 +54,7 @@
         android:id="@+id/etcodigo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textColor="@color/blanco"
         android:ems="10"
         android:gravity="start|top"
         android:inputType="number"
@@ -119,7 +120,7 @@
             android:id="@+id/btnAlta"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="ALTA"
+            android:text="GUARDAR"
             android:textColor="@color/blanco"
             android:layout_marginRight="15dp"
             />
@@ -128,6 +129,7 @@
             android:id="@+id/btnConsultarCodigo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:onClick="onClick"
             android:text="CONSULTA POR CODIGO"
             android:textColor="@color/blanco"/>
 
@@ -158,6 +160,8 @@
                 android:textColor="@color/blanco"/>
 
         </LinearLayout>
+
+
 
 
         <LinearLayout
@@ -202,7 +206,6 @@
                 android:layout_marginRight="15dp"/>
 
         </LinearLayout>
-
 
         </LinearLayout>
     </ScrollView>
